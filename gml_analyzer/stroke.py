@@ -48,6 +48,7 @@ class Stroke:
     """Adding two strokes concatenates their paths"""
     return Stroke( a.points + b.points )
   
+  @property
   def centroid(self):
     if( len(self.points) < 1 ):
       raise ValueError("Centroid cannot be computed without points")
@@ -57,13 +58,15 @@ class Stroke:
     
     return ( x, y )
   
+  @property
   def dimensions(self):
-    min_point, max_point = self.bounds()
+    min_point, max_point = self.bounds
     width = max_point.x - min_point.x
     height = max_point.y - min_point.y
     
     return ( width, height )
   
+  @property
   def bounds(self):
     minimum = Point(float("inf"), float("inf"))
     maximum = Point(float("-inf"), float("-inf"))
@@ -77,16 +80,19 @@ class Stroke:
     
     return ( minimum, maximum )
   
+  @property
   def aspect_ratio(self):
-    width, height = self.dimensions()
+    width, height = self.dimensions
     return height / width if width > 0 else float('NaN')
   
+  @property
   def duration(self):
     if( len(self.points) > 0 ):
       return max(point.t for point in self.points) if(len(self.points) > 0) else 0
     else:
       return 0
   
+  @property
   def arc_length(self):
     """Returns the arc length of the stroke"""
     return sum( p1.xy.distance( p2.xy ) for p1, p2 in each_cons(self.points, 2) )

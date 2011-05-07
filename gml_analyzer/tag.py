@@ -18,7 +18,7 @@ class Tag:
     return hash( tuple(self.strokes) )
 
   def duration(self):
-    return sum(stroke.duration() for stroke in self.strokes)
+    return sum(stroke.duration for stroke in self.strokes)
 
   # def _distances_from_centroid(self):
   #   centroid = self.centroid
@@ -45,8 +45,8 @@ class Tag:
     if(len(self.strokes) < 1):
       raise ValueError("Centroid cannot be computed without points")
 
-    x = sum(stroke.centroid()[0] for stroke in self.strokes) / len(self.strokes)
-    y = sum(stroke.centroid()[1] for stroke in self.strokes) / len(self.strokes)
+    x = sum(stroke.centroid[0] for stroke in self.strokes) / len(self.strokes)
+    y = sum(stroke.centroid[1] for stroke in self.strokes) / len(self.strokes)
 
     return (x, y)
 
