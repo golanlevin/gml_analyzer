@@ -29,10 +29,7 @@ class Stroke:
     if( len(self.points) < 1 ):
       raise ValueError("Centroid cannot be computed without points")
     
-    x = sum(point.x for point in self.points) / len(self.points)
-    y = sum(point.y for point in self.points) / len(self.points)
-    
-    return ( x, y )
+    return sum( (point.xy for point in self.points), Point(0,0) ) / len(self.points)
   
   @property
   def dimensions(self):
