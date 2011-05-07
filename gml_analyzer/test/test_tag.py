@@ -4,6 +4,7 @@ from nose.tools import raises
 
 from gml_analyzer.tag import Tag
 from gml_analyzer.stroke import Stroke
+from gml_analyzer.point import Point, PointXYT
 
 class TagTests(unittest.TestCase):
   
@@ -52,18 +53,41 @@ class TagTests(unittest.TestCase):
   def test_degenerate_gml_string(self):
     self.assertRaises(XMLSyntaxError, Tag.fromGML, "")
   
-  def test_normalized(self):
+  def test_zero_bounds(self):
     tag = Tag()
-    tag.strokes = [Stroke([(-5,-5,-5), (5,5,5)])]
-    normalized = tag.normalized()
-    self.assertEqual(normalized.strokes[0].points, [(0,0,-5), (1,1,5)])
+    self.assertEqual(tag.bounds, (Point.Zero, Point.Zero))
+    
+  def test_bounds(self):
+    tag = Tag()
+    tag.strokes = [ Stroke([(0,0,0)]), Stroke([(1,1,1)]) ]
+    self.assertEqual( tag.bounds, ((0,0), (1,1)) )
   
-  def test_normalized_doesnt_change_original(self):
+  def test_zero_dimensions(self):
     tag = Tag()
-    tag.strokes = [Stroke([(-5,-5,-5), (5,5,5)])]
-    normalized = tag.normalized()
-    self.assertEqual(normalized.strokes[0].points, [(0,0,-5), (1,1,5)])
-    self.assertEqual(tag.strokes[0].points, [(-5,-5,-5), (5,5,5)])
+    self.assertEqual( tag.dimensions, (0,0) )
+    
+  def test_dimesions(self):
+    tag = Tag()
+    tag.strokes = [ Stroke([(-1,-1,-1)]), Stroke([(1,1,1)]) ]
+    self.assertEqual( tag.dimensions, (2,2) )
+  
+  # def test_normalized(self):
+  #   tag = Tag()
+  #   tag.strokes = [Stroke([(-5,-5,-5), (5,5,5)])]
+  #   normalized = tag.normalized()
+  #   self.assertEqual(normalized.strokes[0].points, [(0,0,-5), (1,1,5)])
+  # 
+  # def test_normalized_doesnt_change_original(self):
+  #   tag = Tag()
+  #   tag.strokes = [Stroke([(-5,-5,-5), (5,5,5)])]
+  #   normalized = tag.normalized()
+  #   self.assertEqual(normalized.strokes[0].points, [(0,0,-5), (1,1,5)])
+  #   self.assertEqual(tag.strokes[0].points, [(-5,-5,-5), (5,5,5)])
+  
+  def test_flattened_stroke(self):
+    tag = Tag()
+    tag.strokes = [Stroke([(0,0,0)]), Stroke([(1,1,1)])]
+    self.assertEqual( tag.flattened_stroke().points, [(0,0,0), (1,1,1)] )
   
   def test_flattened(self):
     tag = Tag()

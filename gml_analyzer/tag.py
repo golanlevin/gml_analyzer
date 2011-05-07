@@ -51,6 +51,9 @@ class Tag:
   @property
   def stroke_count(self):
     return len(self.strokes)
+  
+  def flattened_stroke(self):
+    return self.flattened().strokes[0]
 
   def flattened(self):
     """Returns a copy of the tag with all strokes flattened into one stroke"""
@@ -61,6 +64,17 @@ class Tag:
     flattened.strokes = [ one_big_stroke ]
 
     return flattened
+  
+  @property
+  def bounds(self):
+    if(len(self.strokes) < 1):
+      return ( Point.Zero, Point.Zero )
+
+    return self.flattened_stroke().bounds
+  
+  @property
+  def dimensions(self):
+    return self.flattened_stroke().dimensions
 
   def normalized(self):
     """Returns a copy of the tag with strokes normalized in the range 0..1"""
