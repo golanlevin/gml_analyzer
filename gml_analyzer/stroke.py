@@ -34,8 +34,7 @@ class Stroke:
   @property
   def dimensions(self):
     min_point, max_point = self.bounds
-    width = max_point.x - min_point.x
-    height = max_point.y - min_point.y
+    width, height = max_point - min_point
     
     return ( width, height )
   
