@@ -111,7 +111,7 @@ class Tag:
         t = float( t.text ) if t is not None else 0
         points.append( (x,y,t) )
 
-      strokes.append( Stroke(points) )
+      strokes.append( Stroke(*points) )
 
     tag.strokes = strokes
 

@@ -9,7 +9,7 @@ class Stroke:
   
   points = []
   
-  def __init__(self, points=[]):
+  def __init__(self, *points):
     self.points = map( PointXYT._make, points )
   
   def __eq__(self, other):
@@ -22,7 +22,7 @@ class Stroke:
   
   def __add__(a, b):
     """Adding two strokes concatenates their paths"""
-    return Stroke( a.points + b.points )
+    return Stroke( *(a.points + b.points) )
   
   @property
   def centroid(self):
