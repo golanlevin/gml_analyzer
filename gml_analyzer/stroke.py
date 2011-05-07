@@ -1,6 +1,31 @@
 import copy
 from math import sqrt
 
+from collections import namedtuple
+
+class Point( namedtuple('Point', 'x y') ):
+  __slots__ = ()
+  
+  def __add__(a, b):
+    return Point( (a.x + b.x), (a.y + b.y) )
+  
+  def __sub__(a, b):
+    return Point( (a.x - b.x), (a.y - b.y) )
+  
+  def __div__(a, b):
+    return Point( (a.x / b), (a.y / b) )
+  
+  def distance(a, b):
+    delta = a - b
+    return sqrt(delta.x ** 2 + delta.y ** 2)
+
+class PointXYT( namedtuple('PointXYT', 'x y t') ):
+  __slots__ = ()
+  
+  @property
+  def xy(self):
+    return Point( self.x, self.y )
+
 def each_cons(x, size):
     return [x[i:i+size] for i in range(len(x)-size+1)]
 
@@ -9,7 +34,7 @@ class Stroke:
   points = []
   
   def __init__(self, points=[]):
-    self.points = points
+    self.points = map( PointXYT._make, points )
   
   def __eq__(self, other):
     """To reduce duplication, equality is based on hash"""
@@ -17,63 +42,54 @@ class Stroke:
   
   def __hash__(self):
     """If two stroke's points are equal, the strokes are equal"""
-    return hash(tuple(self.points))
+    return hash( tuple(self.points) )
   
   def __add__(a, b):
     """Adding two strokes concatenates their paths"""
-    return Stroke(a.points + b.points)
+    return Stroke( a.points + b.points )
   
   def centroid(self):
-    if(len(self.points) < 1):
+    if( len(self.points) < 1 ):
       raise ValueError("Centroid cannot be computed without points")
     
-    x = sum(point[0] for point in self.points) / len(self.points)
-    y = sum(point[1] for point in self.points) / len(self.points)
+    x = sum(point.x for point in self.points) / len(self.points)
+    y = sum(point.y for point in self.points) / len(self.points)
     
-    return (x, y)
+    return ( x, y )
   
   def dimensions(self):
     min_point, max_point = self.bounds()
-    width = max_point[0] - min_point[0]
-    height = max_point[1] - min_point[1]
-    return (width, height)
+    width = max_point.x - min_point.x
+    height = max_point.y - min_point.y
+    
+    return ( width, height )
   
   def bounds(self):
-    min_x = float("inf")
-    min_y = float("inf")
-    max_x = float("-inf")
-    max_y = float("-inf")
+    minimum = Point(float("inf"), float("inf"))
+    maximum = Point(float("-inf"), float("-inf"))
     
-    if(len(self.points) < 1):
-      return ((0,0), (0,0))
+    if( len(self.points) < 1 ):
+      return ( Point(0,0), Point(0,0) )
     
     for point in self.points:
-      min_x = min(min_x, point[0])
-      min_y = min(min_y, point[1])
-      max_x = max(max_x, point[0])
-      max_y = max(max_y, point[1])
+      minimum = Point( min(minimum.x, point.x), min(minimum.y, point.y) )
+      maximum = Point( max(maximum.x, point.x), max(maximum.y, point.y) )
     
-    return ((min_x, min_y), (max_x, max_y))
-    
+    return ( minimum, maximum )
+  
   def aspect_ratio(self):
     width, height = self.dimensions()
     return height / width if width > 0 else float('NaN')
   
   def duration(self):
-    if(len(self.points) > 0):
-      return max(point[2] for point in self.points) # maximum time point
+    if( len(self.points) > 0 ):
+      return max(point.t for point in self.points) if(len(self.points) > 0) else 0
     else:
       return 0
   
   def arc_length(self):
     """Returns the arc length of the stroke"""
-    length = 0
-    for p1, p2 in each_cons(self.points, 2):
-      dx = p1[0] - p2[0]
-      dy = p1[1] - p2[1]
-      dh = sqrt(dx*dx + dy*dy)
-      length += dh
-    return length
+    return sum( p1.xy.distance( p2.xy ) for p1, p2 in each_cons(self.points, 2) )
   
   def smoothed(self):
     """Returns a copy of the stroke with its points smoothed"""
@@ -82,17 +98,17 @@ class Stroke:
     
     if(len(self.points) < 7):
       return smoothed_stroke
-    
-    for _ in range(10):
-      smoothed_points = []
-       
-      for p1, p2, p3 in each_cons(smoothed_stroke.points, 3):    
-        x = (p1[0] + p2[0] + p3[0]) / 3.0
-        y = (p1[1] + p2[1] + p3[1]) / 3.0
+
+    for _ in xrange(10):
       
-        smoothed_point = [x, y] + list( p2[2:] )
-        smoothed_points.append(tuple(smoothed_point))
-        
+      # Repeat first and last so the ends smooth too
+      smooth_array = [smoothed_stroke.points[0]] + smoothed_stroke.points + [smoothed_stroke.points[-1]]
+  
+      smoothed_points = []
+      for p1, p2, p3 in each_cons(smooth_array, 3):
+        smoothed = (p1.xy + p2.xy + p3.xy) / 3.0
+        smoothed_points.append( PointXYT(smoothed.x, smoothed.y, p2.t) )
+  
       smoothed_stroke.points = smoothed_points
     
     return smoothed_stroke

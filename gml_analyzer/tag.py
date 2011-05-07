@@ -3,6 +3,8 @@ import copy
 
 from stroke import Stroke
 
+
+
 class Tag:
 
   strokes = []
