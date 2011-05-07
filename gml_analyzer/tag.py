@@ -56,12 +56,9 @@ class Tag:
     """Returns a copy of the tag with all strokes flattened into one stroke"""
 
     flattened = copy.copy(self)
-
-    new_stroke = Stroke()
-    for stroke in self.strokes:
-      new_stroke += stroke
-
-    flattened.strokes = [new_stroke]
+    
+    one_big_stroke = sum( (stroke for stroke in self.strokes), Stroke() )
+    flattened.strokes = [ one_big_stroke ]
 
     return flattened
 
