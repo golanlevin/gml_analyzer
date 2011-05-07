@@ -8,37 +8,33 @@ from gml_analyzer.point import Point, PointXYT
 
 class TagTests(unittest.TestCase):
   
+  def setUp(self):
+    self.empty_tag = Tag()
+  
   @raises(ValueError)
   def test_empty_centroid(self):
-    tag = Tag()
-    tag.centroid
+    self.empty_tag.centroid
   
   def test_centroid(self):
-    tag = Tag()
-    tag.strokes = [Stroke((0,0,0)), Stroke((2,2,2))]
+    tag = Tag( Stroke((0,0,0)), Stroke((2,2,2)) )
     self.assertEqual(tag.centroid, (1,1))
   
   def test_empty_duration(self):
-    tag = Tag()
-    self.assertEqual(tag.duration, 0)
+    self.assertEqual(self.empty_tag.duration, 0)
     
   def test_duration(self):
-    tag = Tag()
-    tag.strokes = [Stroke((0,0,1)), Stroke((0,0,2))]
+    tag = Tag( Stroke((0,0,1)), Stroke((0,0,2)) )
     self.assertEqual(tag.duration, 3)
   
   def test_stroke_count(self):
-    tag = Tag()
-    self.assertEqual(tag.stroke_count, 0)
+    self.assertEqual(self.empty_tag.stroke_count, 0)
   
   def test_stroke_count(self):
-    tag = Tag()
-    tag.strokes = [Stroke((0,0,0))]
+    tag = Tag( Stroke((0,0,0)) )
     self.assertEqual(tag.stroke_count, 1)
   
   def test_empty_strokes_array(self):
-    tag = Tag()
-    self.assertEqual(tag.strokes, [])
+    self.assertEqual(self.empty_tag.strokes, ())
   
   def test_empty_tags_equal(self):
     t1 = Tag()
@@ -50,56 +46,47 @@ class TagTests(unittest.TestCase):
     t2 = Tag()
     self.assertEqual(hash(t1), hash(t2))
   
+  @raises(XMLSyntaxError)
   def test_degenerate_gml_string(self):
-    self.assertRaises(XMLSyntaxError, Tag.fromGML, "")
+    Tag.fromGML("")
   
   def test_zero_bounds(self):
-    tag = Tag()
-    self.assertEqual(tag.bounds, (Point.Zero, Point.Zero))
+    self.assertEqual(self.empty_tag.bounds, (Point.Zero, Point.Zero))
     
   def test_bounds(self):
-    tag = Tag()
-    tag.strokes = [ Stroke((0,0,0)), Stroke((1,1,1)) ]
+    tag = Tag( Stroke((0,0,0)), Stroke((1,1,1)) )
     self.assertEqual( tag.bounds, ((0,0), (1,1)) )
   
   def test_zero_dimensions(self):
-    tag = Tag()
-    self.assertEqual( tag.dimensions, (0,0) )
+    self.assertEqual( self.empty_tag.dimensions, (0,0) )
     
   def test_dimesions(self):
-    tag = Tag()
-    tag.strokes = [ Stroke((-1,-1,-1)), Stroke((1,1,1)) ]
+    tag = Tag( Stroke((-1,-1,-1)), Stroke((1,1,1)) )
     self.assertEqual( tag.dimensions, (2,2) )
   
   def test_normalized(self):
-    tag = Tag()
-    tag.strokes = [Stroke((-5,-5,-5), (5,5,5))]
+    tag = Tag( Stroke((-5,-5,-5), (5,5,5)) )
     normalized = tag.normalized()
-    self.assertEqual(normalized.strokes[0].points, [(0,0,-5), (1,1,5)])
+    self.assertEqual( normalized.strokes[0], Stroke((0,0,-5), (1,1,5)) )
   
   def test_normalized_doesnt_change_original(self):
-    tag = Tag()
-    tag.strokes = [Stroke((-5,-5,-5), (5,5,5))]
+    tag = Tag( Stroke((-5,-5,-5), (5,5,5)) )
     normalized = tag.normalized()
-    self.assertEqual(tag.strokes[0].points, [(-5,-5,-5), (5,5,5)])
+    self.assertEqual( tag.strokes[0], Stroke((-5,-5,-5), (5,5,5)) )
   
   def test_flattened_stroke(self):
-    tag = Tag()
-    tag.strokes = [Stroke((0,0,0)), Stroke((1,1,1))]
-    self.assertEqual( tag.flattened_stroke().points, [(0,0,0), (1,1,1)] )
+    tag = Tag( Stroke((0,0,0)), Stroke((1,1,1)) )
+    self.assertEqual( tag.flattened_stroke(), Stroke((0,0,0), (1,1,1)) )
   
   def test_flattened(self):
-    tag = Tag()
-    tag.strokes = [Stroke((0,0,0)), Stroke((1,1,1))]
+    tag = Tag( Stroke((0,0,0)), Stroke((1,1,1)) )
     flattened = tag.flattened()
-    self.assertEqual(flattened.strokes[0].points, [(0,0,0), (1,1,1)])
+    self.assertEqual( flattened.strokes[0], Stroke((0,0,0), (1,1,1)) )
   
   def test_flattened_doesnt_change_original(self):
-    tag = Tag()
-    tag.strokes = [Stroke((0,0,0)), Stroke((1,1,1))]
+    tag = Tag( Stroke((0,0,0)), Stroke((1,1,1)) )
     flattened = tag.flattened()
-    self.assertEqual(flattened.strokes[0].points, [(0,0,0), (1,1,1)])
-    self.assertEqual(tag.strokes[0].points, [(0,0,0)])
+    self.assertEqual( tag.strokes[0], Stroke((0,0,0)) )
   
   def test_simple_gml_string(self):
     gml = """<gml>
@@ -110,4 +97,4 @@ class TagTests(unittest.TestCase):
       </drawing>
     </gml>"""
     tag = Tag.fromGML(gml)
-    self.assertEqual( tag.strokes[0].points[0], (1,1,1) )
+    self.assertEqual( tag.strokes[0], Stroke((1,1,1)) )

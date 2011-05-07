@@ -7,7 +7,10 @@ from point import Point, PointXYT
 
 class Tag:
 
-  strokes = []
+  strokes = ()
+
+  def __init__(self, *strokes):
+    self.strokes = strokes
 
   def __eq__(self, other):
     """To reduce duplication, equality is based on hash"""
