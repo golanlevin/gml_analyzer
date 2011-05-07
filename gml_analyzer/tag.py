@@ -46,7 +46,7 @@ class Tag:
     if(len(self.strokes) < 1):
       raise ValueError("Centroid cannot be computed without points")
 
-    return sum( (stroke.centroid for stroke in self.strokes), Point(0,0) ) / len(self.strokes)
+    return sum( (stroke.centroid for stroke in self.strokes), Point.Zero ) / len(self.strokes)
 
   @property
   def stroke_count(self):

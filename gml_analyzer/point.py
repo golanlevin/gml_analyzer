@@ -17,6 +17,8 @@ class Point( namedtuple('Point', 'x y') ):
     delta = a - b
     return sqrt(delta.x ** 2 + delta.y ** 2)
 
+Point.Zero = Point(0, 0)
+
 class PointXYT( namedtuple('PointXYT', 'x y t') ):
   __slots__ = ()
   
