@@ -1,37 +1,39 @@
 import unittest
 from lxml.etree import XMLSyntaxError
+from nose.tools import raises
 
 from gml_analyzer.tag import Tag
 from gml_analyzer.stroke import Stroke
 
 class TagTests(unittest.TestCase):
   
+  @raises(ValueError)
   def test_empty_centroid(self):
     tag = Tag()
-    self.assertRaises( ValueError, tag.centroid )
+    tag.centroid
   
   def test_centroid(self):
     tag = Tag()
     tag.strokes = [Stroke([(0,0,0)]), Stroke([(2,2,2)])]
-    self.assertEqual(tag.centroid(), (1,1))
+    self.assertEqual(tag.centroid, (1,1))
   
   def test_empty_duration(self):
     tag = Tag()
-    self.assertEqual(tag.duration(), 0)
+    self.assertEqual(tag.duration, 0)
     
   def test_duration(self):
     tag = Tag()
     tag.strokes = [Stroke([(0,0,1)]), Stroke([(0,0,2)])]
-    self.assertEqual(tag.duration(), 3)
+    self.assertEqual(tag.duration, 3)
   
   def test_stroke_count(self):
     tag = Tag()
-    self.assertEqual(tag.stroke_count(), 0)
+    self.assertEqual(tag.stroke_count, 0)
   
   def test_stroke_count(self):
     tag = Tag()
     tag.strokes = [Stroke([(0,0,0)])]
-    self.assertEqual(tag.stroke_count(), 1)
+    self.assertEqual(tag.stroke_count, 1)
   
   def test_empty_strokes_array(self):
     tag = Tag()

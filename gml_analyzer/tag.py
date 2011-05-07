@@ -17,6 +17,7 @@ class Tag:
     """If two tag's strokes are equal, the tags are equal"""
     return hash( tuple(self.strokes) )
 
+  @property
   def duration(self):
     return sum(stroke.duration for stroke in self.strokes)
 
@@ -40,7 +41,7 @@ class Tag:
   # 
   # def std_dev_distance_from_centroid(self):
 
-
+  @property
   def centroid(self):
     if(len(self.strokes) < 1):
       raise ValueError("Centroid cannot be computed without points")
@@ -50,6 +51,7 @@ class Tag:
 
     return (x, y)
 
+  @property
   def stroke_count(self):
     return len(self.strokes)
 
