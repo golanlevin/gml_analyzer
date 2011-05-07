@@ -3,7 +3,7 @@ import copy
 
 from stroke import Stroke
 
-
+from point import Point, PointXYT
 
 class Tag:
 
