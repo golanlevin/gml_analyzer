@@ -80,31 +80,14 @@ class Tag:
     """Returns a copy of the tag with strokes normalized in the range 0..1"""
 
     normalized = copy.deepcopy(self)
-
-    # TODO: DRY this up
-    min_x = float("inf")
-    min_y = float("inf")
-    min_t = float("inf")
-    max_x = float("-inf")
-    max_y = float("-inf")
-    max_t = float("-inf")
+    
+    min_point, max_point = self.bounds
+    
+    width, height = self.dimensions
+    normalizing_range = max(width, height)
 
     for stroke in normalized.strokes:
-      for point in stroke.points:
-        min_x = min(min_x, point[0])
-        min_y = min(min_y, point[1])
-        min_t = min(min_t, point[2])
-        max_x = max(max_x, point[0])
-        max_y = max(max_y, point[1])
-        max_t = max(max_t, point[2])
-
-    range_x = max_x - min_x
-    range_y = max_y - min_y
-    range_t = max_t - min_t
-    normalizing_range = max(range_x, range_y)
-
-    for stroke in normalized.strokes:
-      stroke.points = [ tuple([ (point[0] - min_x) / normalizing_range, (point[1] - min_y) / normalizing_range, point[2] ]) for point in stroke.points ]
+      stroke.points = map( lambda point: (point - min_point) / normalizing_range , stroke.points )
 
     return normalized
 
