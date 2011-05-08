@@ -90,7 +90,7 @@ class Tag:
     normalizing_range = max(width, height)
 
     for stroke in normalized.strokes:
-      stroke.points = map( lambda point: (point - min_point) / normalizing_range , stroke.points )
+      stroke.points = [ (point - min_point) / normalizing_range for point in stroke.points ]
 
     return normalized
 
