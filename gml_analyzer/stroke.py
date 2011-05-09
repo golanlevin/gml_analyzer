@@ -29,8 +29,7 @@ class Stroke:
   
   @property
   def centroid(self):
-    if( len(self.points) < 1 ):
-      raise ValueError("Centroid cannot be computed without points")
+    if not self.points: raise ValueError("Centroid cannot be computed without points")
     
     return sum( (point.xy for point in self.points), Point.Zero ) / len(self.points)
   
@@ -43,9 +42,7 @@ class Stroke:
   
   @property
   def bounds(self):
-    
-    if( len(self.points) < 1 ):
-      return ( Point.Zero, Point.Zero )
+    if not self.points: return ( Point.Zero, Point.Zero )
     
     minimum = Point(float("inf"), float("inf"))
     maximum = Point(float("-inf"), float("-inf"))
@@ -63,10 +60,7 @@ class Stroke:
   
   @property
   def duration(self):
-    if( len(self.points) > 0 ):
-      return max(point.t for point in self.points)
-    else:
-      return 0
+    return max(point.t for point in self.points) if self.points else 0
   
   @property
   def arc_length(self):
