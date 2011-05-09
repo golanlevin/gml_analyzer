@@ -145,7 +145,7 @@ class Stroke:
   def __distances_from_centroid(self):
     centroid = self.centroid
 
-    return [ point.xy.distance( centroid ) for point in self.points ]
+    return [ centroid.distance( point ) for point in self.points ]
   
   @property
   def std_distance_from_centroid(self):
