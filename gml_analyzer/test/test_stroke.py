@@ -136,6 +136,13 @@ class StrokeTests(unittest.TestCase):
     self.assertTrue( smoothed.points[1][0] > 0 )
     self.assertTrue( smoothed.points[2][0] < 1 )
   
+  def test_smoothed_pins_endpoints(self):
+    points = ((50,50,50),) + ((20,20,20),) * 7 + ((80,80,80),)
+    stroke = Stroke(*points)
+    smoothed = stroke.smoothed()
+    self.assertEqual( smoothed.points[0], (50,50,50) )
+    self.assertEqual( smoothed.points[-1], (80,80,80) )
+  
   def test_strokes_with_same_points_have_same_hash(self):
     s1 = Stroke((1,1,1))
     s2 = Stroke((1,1,1))

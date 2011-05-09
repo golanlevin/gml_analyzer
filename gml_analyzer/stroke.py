@@ -228,16 +228,15 @@ class Stroke:
       return smoothed_stroke
 
     for _ in xrange(10):
-      
-      # Repeat first and last so the ends smooth too
-      smooth_array = [smoothed_stroke.points[0]] + smoothed_stroke.points + [smoothed_stroke.points[-1]]
-  
   
       smoothed_points = []
-      for p1, p2, p3 in each_cons(smooth_array, 3):
+      for p1, p2, p3 in each_cons(smoothed_stroke.points, 3):
         smoothed = (p1.xy + p2.xy + p3.xy) / 3.0
         smoothed_points.append( PointXYT(smoothed.x, smoothed.y, p2.t) )
+      
+      # Pin endpoints to their original values so a stroke can't blur into itself
+      smoothed_with_pinned_endpoints = [smoothed_stroke.points[0]] + smoothed_points + [smoothed_stroke.points[-1]]
   
-      smoothed_stroke.points = smoothed_points
+      smoothed_stroke.points = smoothed_with_pinned_endpoints
     
     return smoothed_stroke
