@@ -13,6 +13,9 @@ class Point( namedtuple('Point', 'x y') ):
   def __div__(a, b):
     return Point( (a.x / b), (a.y / b) )
   
+  def angle(a, b):
+    return arccos( dot(a, b) / abs(a) / abs(b) )
+  
   def distance(a, b):
     delta = a - b
     return sqrt(delta.x ** 2 + delta.y ** 2)

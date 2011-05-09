@@ -5,6 +5,16 @@ from nose.tools import raises
 from gml_analyzer.stroke import Stroke
 
 class StrokeTests(unittest.TestCase):
+  # def test_empty_angles(self):
+  #   self.assertEqual( self.empty_stroke.angles, () )
+  
+  def test_single_point_angles(self):
+    stroke = Stroke(((0,0,0)))
+    self.assertEqual( stroke.angles, () )
+  
+  # def test_simple_angles(self):
+  #   stroke = Stroke(((0,0,0), (1,0,0)))
+  #   self.assertEqual( stroke.angles, (0) )
   
   def setUp(self):
     self.empty_stroke = Stroke()

@@ -31,6 +31,9 @@ class Tag:
   def std_distance_from_centroid(self):
     return self.flattened_stroke().std_distance_from_centroid
 
+  # @property
+  # def total_angle(self):
+  #   return sum(self.angles)
 
   @property
   def centroid(self):

@@ -71,6 +71,10 @@ class Stroke:
     """Returns the arc length of the stroke"""
     return sum( p1.xy.distance( p2.xy ) for p1, p2 in each_cons(self.points, 2) )
   
+  @property
+  def angles(self):
+    return tuple( a.xy.angle( b ) for a, b in each_pair(self.points) )
+  
   def __distances_from_centroid(self):
     centroid = self.centroid
 
