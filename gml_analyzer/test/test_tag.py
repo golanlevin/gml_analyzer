@@ -42,13 +42,6 @@ class TagTests(unittest.TestCase):
     tag = Tag( Stroke((0,0,1)), Stroke((0,0,2)) )
     self.assertEqual(tag.duration, 3)
   
-  def test_stroke_count(self):
-    self.assertEqual(self.empty_tag.stroke_count, 0)
-  
-  def test_stroke_count(self):
-    tag = Tag( Stroke((0,0,0)) )
-    self.assertEqual(tag.stroke_count, 1)
-  
   def test_empty_strokes_array(self):
     self.assertEqual(self.empty_tag.strokes, ())
   
@@ -96,17 +89,7 @@ class TagTests(unittest.TestCase):
   def test_flattened_stroke(self):
     tag = Tag( Stroke((0,0,0)), Stroke((1,1,1)) )
     self.assertEqual( tag.flattened_stroke(), Stroke((0,0,0), (1,1,1)) )
-  
-  def test_flattened(self):
-    tag = Tag( Stroke((0,0,0)), Stroke((1,1,1)) )
-    flattened = tag.flattened()
-    self.assertEqual( flattened.strokes[0], Stroke((0,0,0), (1,1,1)) )
-  
-  def test_flattened_doesnt_change_original(self):
-    tag = Tag( Stroke((0,0,0)), Stroke((1,1,1)) )
-    flattened = tag.flattened()
-    self.assertEqual( tag.strokes[0], Stroke((0,0,0)) )
-  
+
   def test_simple_gml_string(self):
     gml = """<gml>
       <drawing>

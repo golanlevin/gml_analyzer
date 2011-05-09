@@ -21,6 +21,7 @@ class Tag:
 
   @property
   def duration(self):
+    """Returns the sum of the durations of the strokes in the tag"""
     return sum(stroke.duration for stroke in self.strokes)
   
   @property
@@ -30,7 +31,7 @@ class Tag:
   @property
   def std_distance_from_centroid(self):
     return self.flattened_stroke().std_distance_from_centroid
-
+  
   # @property
   # def total_angle(self):
   #   return sum(self.angles)
@@ -38,23 +39,6 @@ class Tag:
   @property
   def centroid(self):
     return self.flattened_stroke().centroid
-
-  @property
-  def stroke_count(self):
-    return len(self.strokes)
-  
-  def flattened_stroke(self):
-    return self.flattened().strokes[0]
-
-  def flattened(self):
-    """Returns a copy of the tag with all strokes flattened into one stroke"""
-
-    flattened = copy.copy(self)
-    
-    one_big_stroke = sum( (stroke for stroke in self.strokes), Stroke() )
-    flattened.strokes = [ one_big_stroke ]
-
-    return flattened
   
   @property
   def bounds(self):

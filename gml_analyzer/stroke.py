@@ -13,6 +13,7 @@ class Stroke:
   points = []
   
   def __init__(self, *points):
+    """Initialize a new stroke. All arguments are converted into PointXYT objects on init"""
     self.points = map( PointXYT._make, points )
   
   def __eq__(self, other):
@@ -29,12 +30,14 @@ class Stroke:
   
   @property
   def centroid(self):
+    """Returns the strokes's center of mass or throws an error if the stroke is empty"""
     if not self.points: raise ValueError("Centroid cannot be computed without points")
     
     return sum( (point.xy for point in self.points), Point.Zero ) / len(self.points)
   
   @property
   def dimensions(self):
+    """Returns a tuple containing the stroke's width and height"""
     min_point, max_point = self.bounds
     width, height = max_point - min_point
     
@@ -42,6 +45,7 @@ class Stroke:
   
   @property
   def bounds(self):
+    """Returns a tuple containing the stroke's minimum and maximum point, or (Zero, Zero) if the stroke is empty"""
     if not self.points: return ( Point.Zero, Point.Zero )
     
     minimum = Point(float("inf"), float("inf"))
@@ -55,11 +59,13 @@ class Stroke:
   
   @property
   def aspect_ratio(self):
+    """Returns the ratio of height to width for the stroke, or NaN if the stroke has no width"""
     width, height = self.dimensions
     return height / width if width > 0 else float('NaN')
   
   @property
   def duration(self):
+    """Returns the maximum time value for a point in the stroke"""
     return max(point.t for point in self.points) if self.points else 0
   
   @property
@@ -138,21 +144,24 @@ class Stroke:
   
   # def moments(self):
   
-  @property
-  def angles(self):
+  def __angles__(self):
+    """Returns a tuple containing the angle (in radians) between each pair of points in the stroke"""
     return tuple( a.xy.angle( b ) for a, b in each_pair(self.points) )
   
-  def __distances_from_centroid(self):
+  def __distances_from_centroid__(self):
+    """Returns a tuple containing the distance of each point in the stroke from its centroid"""
     centroid = self.centroid
 
     return [ centroid.distance( point ) for point in self.points ]
   
   @property
   def std_distance_from_centroid(self):
+    """Returns the standard deviation of the distance of each point from the centroid"""
     return std( self.__distances_from_centroid() )
   
   @property
   def mean_distance_from_centroid(self):
+    """Returns the average distance of each point from the centroid"""
     return mean( self.__distances_from_centroid() )
   
   # def convex_hull(self):
