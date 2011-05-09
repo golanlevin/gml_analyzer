@@ -13,20 +13,28 @@ class StrokeTests(unittest.TestCase):
   def setUp(self):
     self.empty_stroke = Stroke()
   
-  # def test_empty_angles(self):
-  #   self.assertEqual( self.empty_stroke.__angles__(), () )
-  # 
-  # def test_single_point_angles(self):
-  #   stroke = Stroke((0,0,0))
-  #   self.assertEqual( stroke.__angles__(), () )
-  # 
-  # def test_two_points_angles(self):
-  #   stroke = Stroke((0,0,0),(1,1,1))
-  #   self.assertEqual( stroke.__angles__(), () )
-  # 
-  # def test_simple_angles(self):
-  #   stroke = Stroke(((0,0,0), (1,0,0)))
-  #   self.assertEqual( stroke.__angles__(), (0) )
+  def test_empty_total_corners(self):
+    self.assertEqual( self.empty_stroke.total_corners, 0 )
+
+  def test_single_point_total_corners(self):
+    stroke = Stroke((0,0,0))
+    self.assertEqual( stroke.total_corners, 0 )
+
+  def test_two_points_total_corners(self):
+    stroke = Stroke((0,0,0), (1,1,1))
+    self.assertEqual( stroke.total_corners, 0 )
+  
+  def test_three_colinear_points_total_corners(self):
+    stroke = Stroke((0,0,0), (1,1,1), (2,2,2))
+    self.assertEqual( stroke.total_corners, 0 )
+
+  def test_right_angle_total_corners(self):
+    stroke = Stroke((0,0,0), (0,1,0), (1,1,0))
+    self.assertEqual( stroke.total_corners, 1 )
+
+  def test_square_total_corners(self):
+    stroke = Stroke((0,0,0), (0,1,0), (1,1,0),(1,0,0))
+    self.assertEqual( stroke.total_corners, 2 )
   
   def test_empty_mean_joint_angle(self):
     self.assertEqual( self.empty_stroke.mean_joint_angle, 0 )
@@ -54,6 +62,111 @@ class StrokeTests(unittest.TestCase):
   def test_four_right_angle_points_mean_joint_angle(self):
     stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(2,1,0))
     self.assertEqualRounded( stroke.mean_joint_angle, math.pi/4 )
+
+  def test_zigzag_mean_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,2,0))
+    self.assertEqualRounded( stroke.mean_joint_angle, 0 )
+
+  def test_empty_mean_absolute_joint_angle(self):
+    self.assertEqual( self.empty_stroke.mean_absolute_joint_angle, 0 )
+  
+  def test_single_point_mean_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0))
+    self.assertEqual( stroke.mean_absolute_joint_angle, 0 )
+  
+  def test_single_point_mean_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0))
+    self.assertEqual( stroke.mean_absolute_joint_angle, 0 )
+  
+  def test_two_points_mean_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(1,1,1))
+    self.assertEqual( stroke.mean_absolute_joint_angle, 0 )
+  
+  def test_three_colinear_points_mean_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(1,1,1),(2,2,2))
+    self.assertEqual( stroke.mean_absolute_joint_angle, 0 )
+  
+  def test_three_right_angle_points_mean_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0))
+    self.assertEqualRounded( stroke.mean_absolute_joint_angle, math.pi/2 )
+  
+  def test_four_right_angle_points_mean_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(2,1,0))
+    self.assertEqualRounded( stroke.mean_absolute_joint_angle, math.pi/4 )
+  
+  def test_zigzag_mean_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,2,0))
+    self.assertEqualRounded( stroke.mean_absolute_joint_angle, math.pi/2 )
+  
+  def test_empty_total_joint_angle(self):
+    self.assertEqual( self.empty_stroke.total_joint_angle, 0 )
+  
+  def test_single_point_total_joint_angle(self):
+    stroke = Stroke((0,0,0))
+    self.assertEqual( stroke.total_joint_angle, 0 )
+  
+  def test_two_points_total_joint_angle(self):
+    stroke = Stroke((0,0,0),(1,1,1))
+    self.assertEqual( stroke.total_joint_angle, 0 )
+  
+  def test_two_points_total_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0))
+    self.assertEqualRounded( stroke.total_joint_angle, math.pi/2 )
+  
+  def test_square_total_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,0,0))
+    self.assertEqualRounded( stroke.total_joint_angle, math.pi )
+  
+  def test_zigzag_total_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,2,0))
+    self.assertEqualRounded( stroke.total_joint_angle, 0 )
+
+  def test_single_point_total_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0))
+    self.assertEqual( stroke.total_joint_angle, 0 )
+
+  def test_two_points_total_joint_angle(self):
+    stroke = Stroke((0,0,0),(1,1,1))
+    self.assertEqual( stroke.total_joint_angle, 0 )
+
+  def test_two_points_total_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0))
+    self.assertEqualRounded( stroke.total_joint_angle, math.pi/2 )
+
+  def test_square_total_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,0,0))
+    self.assertEqualRounded( stroke.total_joint_angle, math.pi )
+
+  def test_zigzag_total_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,2,0))
+    self.assertEqualRounded( stroke.total_joint_angle, 0 )
+
+  def test_empty_total_absolute_joint_angle(self):
+    self.assertEqual( self.empty_stroke.total_absolute_joint_angle, 0 )
+  
+  def test_single_point_total_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0))
+    self.assertEqual( stroke.total_absolute_joint_angle, 0 )
+  
+  def test_two_points_total_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(1,1,1))
+    self.assertEqual( stroke.total_absolute_joint_angle, 0 )
+  
+  def test_two_points_total_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0))
+    self.assertEqualRounded( stroke.total_absolute_joint_angle, math.pi/2 )
+  
+  def test_square_total_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,0,0))
+    self.assertEqualRounded( stroke.total_absolute_joint_angle, math.pi )
+  
+  def test_zigzag_total_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,2,0))
+    self.assertEqualRounded( stroke.total_absolute_joint_angle, math.pi )
+  
+  def test_single_point_total_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0))
+    self.assertEqual( stroke.total_joint_angle, 0 )
   
   def test_empty_self_intersection_count(self):
     self.assertEqual( self.empty_stroke.self_intersection_count, 0 )

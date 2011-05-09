@@ -1,5 +1,6 @@
 import copy
 from numpy import std, mean
+import math
 
 from point import Point, PointXYT
 
@@ -152,10 +153,31 @@ class Stroke:
     """Returns a tuple containing the angle (in radians) between every three points in the stroke"""
     return tuple( a.xy.joint_angle( b.xy, c.xy ) for a, b, c in each_cons(self.points, 3) )
   
+  def __absolute_joint_angles__(self):
+    return tuple( abs(angle) for angle in self.__joint_angles__() )
+  
+  @property
+  def total_joint_angle(self):
+    return sum( self.__joint_angles__() )
+  
+  @property
+  def total_absolute_joint_angle(self):
+    return sum( self.__absolute_joint_angles__() )
+  
   @property
   def mean_joint_angle(self):
     joint_angles = self.__joint_angles__()
     return mean( joint_angles ) if joint_angles else 0
+
+  @property
+  def mean_absolute_joint_angle(self):
+    joint_angles = self.__absolute_joint_angles__()
+    return mean( joint_angles ) if joint_angles else 0
+  
+  @property
+  def total_corners(self):
+    CORNER_THRESHOLD = math.pi / 6
+    return len([ angle for angle in self.__absolute_joint_angles__() if angle > CORNER_THRESHOLD ])
   
   def __distances_from_centroid__(self):
     """Returns a tuple containing the distance of each point in the stroke from its centroid"""
