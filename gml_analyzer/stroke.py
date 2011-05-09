@@ -164,26 +164,35 @@ class Stroke:
     """Returns the average distance of each point from the centroid"""
     return mean( self.__distances_from_centroid__() )
   
-  # def convex_hull(self):
-  #   """
-  #   Computes convex hull via the monotone chain algorithm.
-  #   
-  #   http://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
-  #   """
-  #   
-  #   points = sorted( set( self.points ) )
-  #   
-  #   if len(points) <= 1: return points
-  #   
-  #   lower = []
-  #   upper = []
-  #   for point in points:
-  #     while len(lower) >= 2 and cross(lower[-2], lower[-1], point) <= 0: lower.pop()
-  #     while len(upper) >= 2 and cross(upper[-2], upper[-1], point) >= 0: upper.pop()
-  #     upper.append(point)
-  #     lower.append(point)
-  # 
-  #   return upper[:-1] + lower[:-1]
+  @property
+  def convex_hull(self):
+    """
+    Computes convex hull via the monotone chain algorithm.
+    
+    http://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
+    """
+    
+    points = sorted( set( self.points ) )
+    
+    if len(points) <= 1: return Stroke(*points)
+    
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    
+    lower = []
+    for point in points:
+      while len(lower) >= 2 and cross(lower[-2], lower[-1], point) <= 0:
+          lower.pop()
+      lower.append(point)
+
+    upper = []
+    for point in reversed(points):
+      while len(upper) >= 2 and cross(upper[-2], upper[-1], point) <= 0: 
+        upper.pop()
+      upper.append(point)
+  
+    hull = lower[:-1] + upper[:-1]
+    return Stroke(*hull)
 
   # def hull_area(self):
   #   twice_area = sum( (p1.x * p2.y) - (p1.y * p2.x) for p1, p2 in each_pair(self.convex_hull.points) )
@@ -217,6 +226,7 @@ class Stroke:
       
       # Repeat first and last so the ends smooth too
       smooth_array = [smoothed_stroke.points[0]] + smoothed_stroke.points + [smoothed_stroke.points[-1]]
+  
   
       smoothed_points = []
       for p1, p2, p3 in each_cons(smooth_array, 3):
