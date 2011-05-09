@@ -152,17 +152,17 @@ class Stroke:
     """Returns a tuple containing the distance of each point in the stroke from its centroid"""
     centroid = self.centroid
 
-    return [ centroid.distance( point ) for point in self.points ]
+    return tuple( centroid.distance( point ) for point in self.points )
   
   @property
   def std_distance_from_centroid(self):
     """Returns the standard deviation of the distance of each point from the centroid"""
-    return std( self.__distances_from_centroid() )
+    return std( self.__distances_from_centroid__() )
   
   @property
   def mean_distance_from_centroid(self):
     """Returns the average distance of each point from the centroid"""
-    return mean( self.__distances_from_centroid() )
+    return mean( self.__distances_from_centroid__() )
   
   # def convex_hull(self):
   #   """

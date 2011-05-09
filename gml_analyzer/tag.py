@@ -19,6 +19,10 @@ class Tag:
     """If two tag's strokes are equal, the tags are equal"""
     return hash( tuple(self.strokes) )
 
+  def flattened_stroke(self):
+    """Returns a stroke containing of all tag's strokes concatenated together"""
+    return sum( (stroke for stroke in self.strokes), Stroke() )
+
   @property
   def duration(self):
     """Returns the sum of the durations of the strokes in the tag"""

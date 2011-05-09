@@ -6,15 +6,15 @@ from gml_analyzer.stroke import Stroke
 
 class StrokeTests(unittest.TestCase):
   # def test_empty_angles(self):
-  #   self.assertEqual( self.empty_stroke.angles, () )
+  #   self.assertEqual( self.empty_stroke.__angles__(), () )
   
   def test_single_point_angles(self):
     stroke = Stroke(((0,0,0)))
-    self.assertEqual( stroke.angles, () )
+    self.assertEqual( stroke.__angles__(), () )
   
   # def test_simple_angles(self):
   #   stroke = Stroke(((0,0,0), (1,0,0)))
-  #   self.assertEqual( stroke.angles, (0) )
+  #   self.assertEqual( stroke.__angles__(), (0) )
   
   def setUp(self):
     self.empty_stroke = Stroke()
