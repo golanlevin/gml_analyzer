@@ -4,7 +4,9 @@ from numpy import std, mean
 from point import Point, PointXYT
 
 def each_cons(x, size):
-    return [x[i:i+size] for i in range(len(x)-size+1)]
+    return [ x[i:i+size] for i in range( len(x)-size+1 ) ]
+def each_pair(x):
+    return each_cons(x, 2)
 
 class Stroke:
   
@@ -69,7 +71,7 @@ class Stroke:
   @property
   def arc_length(self):
     """Returns the arc length of the stroke"""
-    return sum( p1.xy.distance( p2.xy ) for p1, p2 in each_cons(self.points, 2) )
+    return sum( p1.xy.distance( p2 ) for p1, p2 in each_pair(self.points) )
   
   @property
   def angles(self):
