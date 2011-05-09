@@ -67,6 +67,77 @@ class Stroke:
     """Returns the arc length of the stroke"""
     return sum( p1.xy.distance( p2 ) for p1, p2 in each_pair(self.points) )
   
+  # def intersection_count(self, other):
+  #   """"""
+  #   
+  #   def intersect(a, b, c, d):
+  #     """
+  #     Cleverly determine if two lines intersect using the orientation of their points.
+  #     
+  #     Algorithm fails with overlapping colinear segments, endpoints inside segments, and shared endpoints.
+  #     
+  #     http://www.bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
+  #     """
+  #     def ccw(a, b, c):
+  #       return (c.y-a.y)*(b.x-a.x) > (b.y-a.y)*(c.x-a.x)
+  #     
+  #     return ccw(a,c,d) != ccw(b,c,d) and ccw(a,b,c) != ccw(a,b,d)
+  #   
+  #     count = 0
+  #     for a, b in each_pair(self.points):
+  #       for c, d in each_pair(other.points):
+  #         if( intersect( a, b, c, d ) ):
+  #           count += 1
+  # 
+  #     return count / 2
+  # 
+  # @property
+  # def self_intersection_count(self):
+  #   return self.intersection_count(self)
+  
+  # @property
+  # def velocity(self):
+  #   velocity = Point.Zero
+  #   deltas = [ p2 - p1 for p1, p2 in each_pair(self.points) ]
+  #   mean = sum( deltas, Point.Zero ) / len( deltas )
+  
+  # def velocity_orientation(self):
+  #   return self.derivative.orientation
+  
+  # def velocity_orientedness(self):
+  #   return self.derivative.orientedness
+  
+  # def mean_velocity(self):
+  #   return self.derivative.centroid
+  
+  # def speed(self):
+  #   return ( )
+  
+  # def derivative(self):
+  #   return Stroke( p2 - p1 for p1, p2 in each_pair(self.points) )
+
+  # def __principal_components__(self):
+  #   '''
+  #   
+  #   http://stackoverflow.com/questions/4823223/numpy-eig-and-the-percentage-of-variance-in-pca
+  #   '''
+  #   data = numpy.array( self.points )
+  #   data = (data - data.mean(axis=0)) / data.std(axis=0)
+  #   c = corrcoef(data, rowvar=0)
+  #   return linalg.eig(c)
+  # 
+  # @property
+  # def orientation(self):
+  #   values, vectors = self.__principal_components__()
+  #   return vectors[0]
+  # 
+  # @property
+  # def orientedness(self):
+  #   values, vectors = self.__principal_components__()
+  #   return values[0]
+  
+  # def moments(self):
+  
   @property
   def angles(self):
     return tuple( a.xy.angle( b ) for a, b in each_pair(self.points) )
@@ -83,6 +154,47 @@ class Stroke:
   @property
   def mean_distance_from_centroid(self):
     return mean( self.__distances_from_centroid() )
+  
+  # def convex_hull(self):
+  #   """
+  #   Computes convex hull via the monotone chain algorithm.
+  #   
+  #   http://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
+  #   """
+  #   
+  #   points = sorted( set( self.points ) )
+  #   
+  #   if len(points) <= 1: return points
+  #   
+  #   lower = []
+  #   upper = []
+  #   for point in points:
+  #     while len(lower) >= 2 and cross(lower[-2], lower[-1], point) <= 0: lower.pop()
+  #     while len(upper) >= 2 and cross(upper[-2], upper[-1], point) >= 0: upper.pop()
+  #     upper.append(point)
+  #     lower.append(point)
+  # 
+  #   return upper[:-1] + lower[:-1]
+
+  # def hull_area(self):
+  #   twice_area = sum( (p1.x * p2.y) - (p1.y * p2.x) for p1, p2 in each_pair(self.convex_hull.points) )
+  #   return abs( twice_area / 2 )
+  
+  # def compactness(self):
+  #   return sqrt( self.arc_length ** 2 / hull_area ) if self.hull_area > 0 else 0
+  
+  # def hull_point_percentage(self):
+  #   def clamp(x, low, high):
+  #     return min(high, max(low, x))
+  #   
+  #   stroke_point_count = len(self.points)
+  #   hull_point_count = len(self.convex_hull.points)
+  #   
+  #   if stroke_point_count > 3 and hull_point_count > 3:
+  #     percentage = float(hull_point_count) / stroke_point_count
+  #     return clamp(percentage, 0, 1)
+  #   else:
+  #     return 0
   
   def smoothed(self):
     """Returns a copy of the stroke with its points smoothed"""
