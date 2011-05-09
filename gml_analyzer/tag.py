@@ -2,7 +2,6 @@ from lxml import etree
 import copy
 
 from stroke import Stroke
-
 from point import Point, PointXYT
 
 class Tag:
@@ -23,33 +22,19 @@ class Tag:
   @property
   def duration(self):
     return sum(stroke.duration for stroke in self.strokes)
+  
+  @property
+  def mean_distance_from_centroid(self):
+    return self.flattened_stroke().mean_distance_from_centroid
+  
+  @property
+  def std_distance_from_centroid(self):
+    return self.flattened_stroke().std_distance_from_centroid
 
-  # def _distances_from_centroid(self):
-  #   centroid = self.centroid
-  #   flattened = self.flattened()
-  #   points = flattened.strokes[0].points
-  #   
-  #   distances = []
-  #   
-  #   for point in points
-  #     dx = point[0] - centroid[0]
-  #     dy = point[1] - centroid[1]
-  #     distances.append( sqrt(dx*dx + dy*dy) )
-  #   
-  #   return distances
-  # 
-  # def mean_distance_from_centroid(self):
-  #   distances = self._distances_from_centroid()
-  #   return sum(distances) / len(distances)
-  # 
-  # def std_dev_distance_from_centroid(self):
 
   @property
   def centroid(self):
-    if(len(self.strokes) < 1):
-      raise ValueError("Centroid cannot be computed without points")
-
-    return sum( (stroke.centroid for stroke in self.strokes), Point.Zero ) / len(self.strokes)
+    return self.flattened_stroke().centroid
 
   @property
   def stroke_count(self):

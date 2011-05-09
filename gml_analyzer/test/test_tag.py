@@ -15,6 +15,22 @@ class TagTests(unittest.TestCase):
   def test_empty_centroid(self):
     self.empty_tag.centroid
   
+  @raises(ValueError)
+  def test_empty_mean_distance_from_centroid(self):
+    self.empty_tag.mean_distance_from_centroid
+  
+  def test_equal_mean_distance_from_centroid(self):
+    tag = Tag( Stroke((-1,0,0)), Stroke((1,0,0)))
+    self.assertEqual( tag.mean_distance_from_centroid, 1 )
+  
+  def test_mean_distance_from_centroid(self):
+    tag = Tag( Stroke((0,-1,0)), Stroke((0,3,0)))
+    self.assertEqual( tag.mean_distance_from_centroid, 2 )
+  
+  def test_std_distance_from_centroid(self):
+    tag = Tag( Stroke((0,0,0)), Stroke((0,1,0)))
+    self.assertEqual( tag.std_distance_from_centroid, 0.5 )
+  
   def test_centroid(self):
     tag = Tag( Stroke((0,0,0)), Stroke((2,2,2)) )
     self.assertEqual(tag.centroid, (1,1))

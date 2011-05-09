@@ -1,4 +1,5 @@
 import copy
+from numpy import std, mean
 
 from point import Point, PointXYT
 
@@ -68,6 +69,19 @@ class Stroke:
   def arc_length(self):
     """Returns the arc length of the stroke"""
     return sum( p1.xy.distance( p2.xy ) for p1, p2 in each_cons(self.points, 2) )
+  
+  def __distances_from_centroid(self):
+    centroid = self.centroid
+
+    return [ point.xy.distance( centroid ) for point in self.points ]
+  
+  @property
+  def std_distance_from_centroid(self):
+    return std( self.__distances_from_centroid() )
+  
+  @property
+  def mean_distance_from_centroid(self):
+    return mean( self.__distances_from_centroid() )
   
   def smoothed(self):
     """Returns a copy of the stroke with its points smoothed"""
