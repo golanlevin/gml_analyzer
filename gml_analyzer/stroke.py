@@ -28,6 +28,9 @@ class Stroke:
     """Adding two strokes concatenates their paths"""
     return Stroke( *(a.points + b.points) )
   
+  def __repr__(self):
+    return "<%s %r>" % (self.__class__, self.points)
+  
   @property
   def centroid(self):
     """Returns the strokes's center of mass or throws an error if the stroke is empty"""
