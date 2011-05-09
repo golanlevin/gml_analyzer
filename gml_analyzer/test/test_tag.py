@@ -90,6 +90,9 @@ class TagTests(unittest.TestCase):
     normalized = tag.normalized()
     self.assertEqual( tag.strokes[0], Stroke((-5,-5,-5), (5,5,5)) )
   
+  def test_empty_flattened_stroke(self):
+    self.assertEqual( self.empty_tag.flattened_stroke(), Stroke() )
+  
   def test_flattened_stroke(self):
     tag = Tag( Stroke((0,0,0)), Stroke((1,1,1)) )
     self.assertEqual( tag.flattened_stroke(), Stroke((0,0,0), (1,1,1)) )

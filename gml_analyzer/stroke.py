@@ -41,11 +41,12 @@ class Stroke:
   
   @property
   def bounds(self):
-    minimum = Point(float("inf"), float("inf"))
-    maximum = Point(float("-inf"), float("-inf"))
     
     if( len(self.points) < 1 ):
       return ( Point.Zero, Point.Zero )
+    
+    minimum = Point(float("inf"), float("inf"))
+    maximum = Point(float("-inf"), float("-inf"))
     
     for point in self.points:
       minimum = Point( min(minimum.x, point.x), min(minimum.y, point.y) )
@@ -61,7 +62,7 @@ class Stroke:
   @property
   def duration(self):
     if( len(self.points) > 0 ):
-      return max(point.t for point in self.points) if(len(self.points) > 0) else 0
+      return max(point.t for point in self.points)
     else:
       return 0
   

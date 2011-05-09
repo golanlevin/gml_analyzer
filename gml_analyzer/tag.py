@@ -55,9 +55,6 @@ class Tag:
   
   @property
   def bounds(self):
-    if(len(self.strokes) < 1):
-      return ( Point.Zero, Point.Zero )
-
     return self.flattened_stroke().bounds
   
   @property
