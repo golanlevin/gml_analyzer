@@ -19,6 +19,17 @@ class StrokeTests(unittest.TestCase):
   def setUp(self):
     self.empty_stroke = Stroke()
   
+  def test_empty_self_intersection_count(self):
+    self.assertEqual( self.empty_stroke.self_intersection_count, 0 )
+  
+  def test_single_self_intersection_count(self):
+    stroke = Stroke((0,0,0),(1,1,0),(1,0,0),(0,1,0))
+    self.assertEqual( stroke.self_intersection_count, 1)
+  
+  def test_double_self_intersection_count(self):
+    stroke = Stroke((0,0,0),(1,1,0),(1,0,0),(0,1,0),(-1,1,0))
+    self.assertEqual( stroke.self_intersection_count, 2)
+  
   def test_empty_hull_area(self):
     self.assertEqual( self.empty_stroke.hull_area, 0 )
   

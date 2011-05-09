@@ -76,33 +76,34 @@ class Stroke:
     """Returns the arc length of the stroke"""
     return sum( p1.xy.distance( p2 ) for p1, p2 in each_pair(self.points) )
   
-  # def intersection_count(self, other):
-  #   """"""
-  #   
-  #   def intersect(a, b, c, d):
-  #     """
-  #     Cleverly determine if two lines intersect using the orientation of their points.
-  #     
-  #     Algorithm fails with overlapping colinear segments, endpoints inside segments, and shared endpoints.
-  #     
-  #     http://www.bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
-  #     """
-  #     def ccw(a, b, c):
-  #       return (c.y-a.y)*(b.x-a.x) > (b.y-a.y)*(c.x-a.x)
-  #     
-  #     return ccw(a,c,d) != ccw(b,c,d) and ccw(a,b,c) != ccw(a,b,d)
-  #   
-  #     count = 0
-  #     for a, b in each_pair(self.points):
-  #       for c, d in each_pair(other.points):
-  #         if( intersect( a, b, c, d ) ):
-  #           count += 1
-  # 
-  #     return count / 2
-  # 
-  # @property
-  # def self_intersection_count(self):
-  #   return self.intersection_count(self)
+  def __intersection_count__(self, other):
+    """Returns the number of intersections of this stroke with another stroke"""
+    
+    def intersect(a, b, c, d):
+      """
+      Cleverly determine if two lines intersect using the orientation of their points.
+      
+      Algorithm fails with overlapping colinear segments, endpoints inside segments, and shared endpoints.
+      
+      http://www.bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
+      """
+      def ccw(a, b, c):
+        return (c.y-a.y)*(b.x-a.x) > (b.y-a.y)*(c.x-a.x)
+      
+      return ccw(a,c,d) != ccw(b,c,d) and ccw(a,b,c) != ccw(a,b,d)
+    
+    count = 0
+    for a, b in each_pair(self.points):
+      for c, d in each_pair(other.points):
+        if( intersect( a, b, c, d ) ):
+          count += 1
+
+    return count / 2
+  
+  @property
+  def self_intersection_count(self):
+    """Returns the number of places where the stroke intersects with itself"""
+    return self.__intersection_count__(self)
   
   # @property
   # def velocity(self):
