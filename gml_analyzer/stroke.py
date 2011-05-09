@@ -197,9 +197,10 @@ class Stroke:
     hull = lower[:-1] + upper[:-1]
     return Stroke(*hull)
 
-  # def hull_area(self):
-  #   twice_area = sum( (p1.x * p2.y) - (p1.y * p2.x) for p1, p2 in each_pair(self.convex_hull.points) )
-  #   return abs( twice_area / 2 )
+  @property
+  def hull_area(self):
+    twice_area = sum( (p1.x * p2.y) - (p1.y * p2.x) for p1, p2 in each_pair(self.convex_hull.points) )
+    return abs( twice_area / 2 )
   
   # def compactness(self):
   #   return sqrt( self.arc_length ** 2 / hull_area ) if self.hull_area > 0 else 0

@@ -19,6 +19,17 @@ class StrokeTests(unittest.TestCase):
   def setUp(self):
     self.empty_stroke = Stroke()
   
+  def test_empty_hull_area(self):
+    self.assertEqual( self.empty_stroke.hull_area, 0 )
+  
+  def test_two_point_hull_area(self):
+    stroke = Stroke((0,0,0),(0,1,0))
+    self.assertEqual( self.empty_stroke.hull_area, 0 )
+  
+  def test_square_hull_area(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,0,0))
+    self.assertEqual( stroke.hull_area, 1 )
+  
   def test_empty_hull(self):
     self.assertEqual( self.empty_stroke.convex_hull, Stroke() )
   
