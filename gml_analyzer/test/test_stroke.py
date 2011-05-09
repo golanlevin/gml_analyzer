@@ -13,6 +13,13 @@ class StrokeTests(unittest.TestCase):
   def setUp(self):
     self.empty_stroke = Stroke()
   
+  def test_std_absolute_joint_angle(self):
+    self.assertEqual( self.empty_stroke.std_absolute_joint_angle, 0 )
+  
+  def test_square_std_absolute_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(1,0,0))
+    self.assertEqual( stroke.std_absolute_joint_angle, 0 )
+  
   def test_empty_total_corners(self):
     self.assertEqual( self.empty_stroke.total_corners, 0 )
 

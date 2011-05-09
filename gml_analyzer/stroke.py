@@ -175,6 +175,10 @@ class Stroke:
     return mean( joint_angles ) if joint_angles else 0
   
   @property
+  def std_absolute_joint_angle(self):
+    return std( self.__absolute_joint_angles__() )
+  
+  @property
   def total_corners(self):
     CORNER_THRESHOLD = math.pi / 6
     return len([ angle for angle in self.__absolute_joint_angles__() if angle > CORNER_THRESHOLD ])
