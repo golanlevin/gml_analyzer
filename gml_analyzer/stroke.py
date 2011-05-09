@@ -148,9 +148,14 @@ class Stroke:
   
   # def moments(self):
   
-  def __angles__(self):
-    """Returns a tuple containing the angle (in radians) between each pair of points in the stroke"""
-    return tuple( a.xy.angle( b ) for a, b in each_pair(self.points) )
+  def __joint_angles__(self):
+    """Returns a tuple containing the angle (in radians) between every three points in the stroke"""
+    return tuple( a.xy.joint_angle( b.xy, c.xy ) for a, b, c in each_cons(self.points, 3) )
+  
+  @property
+  def mean_joint_angle(self):
+    joint_angles = self.__joint_angles__()
+    return mean( joint_angles ) if joint_angles else 0
   
   def __distances_from_centroid__(self):
     """Returns a tuple containing the distance of each point in the stroke from its centroid"""

@@ -1,4 +1,4 @@
-from math import sqrt
+from math import sqrt, acos, degrees, copysign, pi
 from collections import namedtuple
 
 class Point( namedtuple('Point', 'x y') ):
@@ -15,6 +15,20 @@ class Point( namedtuple('Point', 'x y') ):
   
   def angle(a, b):
     return arccos( dot(a, b) / abs(a) / abs(b) )
+  
+  def joint_angle(A, C, B):
+    a = C.distance(B)
+    b = A.distance(C)
+    c = B.distance(A)
+    
+    if a == 0 or b == 0: return 0
+    
+    def signed_area(p1, p2, p3):
+      return (p2.x - p1.x)*(p3.y - p1.y) - (p2.y - p1.y)*(p3.x - p1.x)
+    
+    theta = pi - acos( (a**2 + b**2 - c**2) / (2.0 * a * b) )
+    
+    return copysign(theta, signed_area(A,B,C))
   
   def distance(a, b):
     delta = a - b

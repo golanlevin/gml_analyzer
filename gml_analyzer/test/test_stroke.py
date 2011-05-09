@@ -5,19 +5,55 @@ from nose.tools import raises
 from gml_analyzer.stroke import Stroke
 
 class StrokeTests(unittest.TestCase):
+  
+  def assertEqualRounded(self, a, b, **kwargs):
+    ACCURACY = 6
+    self.assertEqual( round(a, ACCURACY), round(b, ACCURACY), **kwargs)
+  
+  def setUp(self):
+    self.empty_stroke = Stroke()
+  
   # def test_empty_angles(self):
   #   self.assertEqual( self.empty_stroke.__angles__(), () )
-  
-  def test_single_point_angles(self):
-    stroke = Stroke(((0,0,0)))
-    self.assertEqual( stroke.__angles__(), () )
-  
+  # 
+  # def test_single_point_angles(self):
+  #   stroke = Stroke((0,0,0))
+  #   self.assertEqual( stroke.__angles__(), () )
+  # 
+  # def test_two_points_angles(self):
+  #   stroke = Stroke((0,0,0),(1,1,1))
+  #   self.assertEqual( stroke.__angles__(), () )
+  # 
   # def test_simple_angles(self):
   #   stroke = Stroke(((0,0,0), (1,0,0)))
   #   self.assertEqual( stroke.__angles__(), (0) )
   
-  def setUp(self):
-    self.empty_stroke = Stroke()
+  def test_empty_mean_joint_angle(self):
+    self.assertEqual( self.empty_stroke.mean_joint_angle, 0 )
+  
+  def test_single_point_mean_joint_angle(self):
+    stroke = Stroke((0,0,0))
+    self.assertEqual( stroke.mean_joint_angle, 0 )
+  
+  def test_single_point_mean_joint_angle(self):
+    stroke = Stroke((0,0,0))
+    self.assertEqual( stroke.mean_joint_angle, 0 )
+  
+  def test_two_points_mean_joint_angle(self):
+    stroke = Stroke((0,0,0),(1,1,1))
+    self.assertEqual( stroke.mean_joint_angle, 0 )
+  
+  def test_three_colinear_points_mean_joint_angle(self):
+    stroke = Stroke((0,0,0),(1,1,1),(2,2,2))
+    self.assertEqual( stroke.mean_joint_angle, 0 )
+  
+  def test_three_right_angle_points_mean_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0))
+    self.assertEqualRounded( stroke.mean_joint_angle, math.pi/2 )
+  
+  def test_four_right_angle_points_mean_joint_angle(self):
+    stroke = Stroke((0,0,0),(0,1,0),(1,1,0),(2,1,0))
+    self.assertEqualRounded( stroke.mean_joint_angle, math.pi/4 )
   
   def test_empty_self_intersection_count(self):
     self.assertEqual( self.empty_stroke.self_intersection_count, 0 )
