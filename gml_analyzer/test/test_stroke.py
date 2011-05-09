@@ -6,10 +6,12 @@ from gml_analyzer.stroke import Stroke
 
 class StrokeTests(unittest.TestCase):
   
+  def setUp(self):
+    self.empty_stroke = Stroke()
+  
   @raises(ValueError)
   def test_empty_centroid(self):
-    stroke = Stroke()
-    stroke.centroid
+    self.empty_stroke.centroid
   
   def test_zero_centroid(self):
     stroke = Stroke((0,0,0))
@@ -24,8 +26,7 @@ class StrokeTests(unittest.TestCase):
     self.assertEqual( stroke.centroid, (2,1) )
   
   def test_zero_duration(self):
-    stroke = Stroke()
-    self.assertEqual(stroke.duration, 0)
+    self.assertEqual( self.empty_stroke.duration, 0 )
   
   def test_duration(self):
     stroke = Stroke((0,0,1))
@@ -36,16 +37,14 @@ class StrokeTests(unittest.TestCase):
     self.assertEqual(stroke.duration, 2)
   
   def test_zero_arc_length(self):
-    stroke = Stroke()
-    self.assertEqual(stroke.arc_length, 0)
+    self.assertEqual( self.empty_stroke.arc_length, 0 )
   
   def test_one_arc_length(self):
     stroke = Stroke((0,0,0),(1,0,0))
     self.assertEqual(stroke.arc_length, 1)
   
   def test_empty_stroke(self):
-    stroke = Stroke()
-    self.assertEqual(stroke.points, [])
+    self.assertEqual( self.empty_stroke.points, [] )
     
   def test_concatenation(self):
     s1 = Stroke((0,0,0))
@@ -100,20 +99,17 @@ class StrokeTests(unittest.TestCase):
     self.assertEqual(stroke.bounds, ((-1,-1),(1,1)))
   
   def test_zero_bounds(self):
-    stroke = Stroke()
-    self.assertEqual(stroke.bounds, ((0,0), (0,0)))
+    self.assertEqual( self.empty_stroke.bounds, ((0,0), (0,0)) )
   
   def test_dimensions(self):
     stroke = Stroke((-1,-1,-1),(1,1,1))
     self.assertEqual(stroke.dimensions, (2,2))
   
   def test_zero_dimensions(self):
-    stroke = Stroke()
-    self.assertEqual(stroke.dimensions, (0,0))
+    self.assertEqual( self.empty_stroke.dimensions, (0,0) )
   
   def test_degenerate_aspect_ratio(self):
-    stroke = Stroke()
-    self.assertTrue( math.isnan(stroke.aspect_ratio) )
+    self.assertTrue( math.isnan(self.empty_stroke.aspect_ratio) )
   
   def test_aspect_ratio(self):
     stroke = Stroke((0,0,0),(1,0,0))
