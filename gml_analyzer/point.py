@@ -1,20 +1,26 @@
 from math import sqrt, acos, degrees, copysign, pi
 from collections import namedtuple
+from numpy import ndarray, arccos, asarray, vdot, abs
+import numpy
 
-class Point( namedtuple('Point', 'x y') ):
-  __slots__ = ()
+class Point(ndarray):
   
-  def __add__(a, b):
-    return Point( (a.x + b.x), (a.y + b.y) )
+  def __new__(klass, input_array, dtype=float):
+    return asarray(input_array, dtype=float).view(klass)
   
-  def __sub__(a, b):
-    return Point( (a.x - b.x), (a.y - b.y) )
+  def __eq__(self, other):
+    return numpy.equal(self, other).all()
   
-  def __div__(a, b):
-    return Point( (a.x / b), (a.y / b) )
+  @property
+  def x(self):
+    return self[0]
+  
+  @property
+  def y(self):
+    return self[1]
   
   def angle(a, b):
-    return arccos( dot(a, b) / abs(a) / abs(b) )
+    return arccos( vdot(a, b) / vabs(a) / vabs(b) )
   
   def joint_angle(A, C, B):
     a = C.distance(B)
@@ -34,23 +40,33 @@ class Point( namedtuple('Point', 'x y') ):
     delta = a - b
     return sqrt(delta.x ** 2 + delta.y ** 2)
 
-Point.Zero = Point(0, 0)
+Point.Zero = Point((0, 0))
 
-class PointXYT( namedtuple('PointXYT', 'x y t') ):
-  __slots__ = ()
+class PointXYT(ndarray):
   
-  def __coerce__(self, other):
-    if( hasattr(other, 'x') or hasattr(other, 'y') ):
-      coerced = PointXYT( getattr(other, 'x', 0), getattr(other, 'y', 0), getattr(other, 't', 0) )
-      return (self, coerced)
-  
-  def __sub__(a, b):
-    a, b = coerce(a, b)
-    return PointXYT( (a.x - b.x), (a.y - b.y), (a.t - b.t) )
-  
-  def __div__(a, b):
-    return PointXYT( (a.x / b), (a.y / b), a.t )
+  def __new__(klass, input_array, dtype=float):
+    return asarray(input_array, dtype=float).view(klass)
+
+  def __eq__(self, other):
+    return numpy.equal(self, other).all()
+
+  @property
+  def x(self):
+    return self[0]
+
+  @property
+  def y(self):
+    return self[1]
+
+  @property
+  def t(self):
+    return self[2]
+
+  # def __coerce__(self, other):
+  #   if( hasattr(other, 'x') or hasattr(other, 'y') ):
+  #     coerced = PointXYT( getattr(other, 'x', 0), getattr(other, 'y', 0), getattr(other, 't', 0) )
+  #     return (self, coerced)
   
   @property
   def xy(self):
-    return Point( self.x, self.y )
+    return Point( (self.x, self.y) )

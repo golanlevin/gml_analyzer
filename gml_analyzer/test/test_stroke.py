@@ -218,6 +218,7 @@ class StrokeTests(unittest.TestCase):
   
   def test_zero_centroid(self):
     stroke = Stroke((0,0,0))
+    print stroke.centroid == (0,0)
     self.assertEqual( stroke.centroid, (0,0) )
   
   def test_square_centroid(self):

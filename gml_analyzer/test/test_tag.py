@@ -28,8 +28,8 @@ class TagTests(unittest.TestCase):
     self.assertEqual( tag.mean_distance_from_centroid, 2 )
   
   def test_std_distance_from_centroid(self):
-    tag = Tag( Stroke((0,0,0)), Stroke((0,1,0)))
-    self.assertEqual( tag.std_distance_from_centroid, 0.5 )
+    tag = Tag( Stroke((0,0,0)), Stroke((0,1,0)) )
+    self.assertEqual( tag.std_distance_from_centroid, 0 )
   
   def test_centroid(self):
     tag = Tag( Stroke((0,0,0)), Stroke((2,2,2)) )
@@ -73,15 +73,15 @@ class TagTests(unittest.TestCase):
     tag = Tag( Stroke((-1,-1,-1)), Stroke((1,1,1)) )
     self.assertEqual( tag.dimensions, (2,2) )
   
-  def test_normalized(self):
-    tag = Tag( Stroke((-5,-5,-5), (5,5,5)) )
-    normalized = tag.normalized()
-    self.assertEqual( normalized.strokes[0], Stroke((0,0,-5), (1,1,5)) )
-  
-  def test_normalized_doesnt_change_original(self):
-    tag = Tag( Stroke((-5,-5,-5), (5,5,5)) )
-    normalized = tag.normalized()
-    self.assertEqual( tag.strokes[0], Stroke((-5,-5,-5), (5,5,5)) )
+  # def test_normalized(self):
+  #   tag = Tag( Stroke((-5,-5,-5), (5,5,5)) )
+  #   normalized = tag.normalized()
+  #   self.assertEqual( normalized.strokes[0], Stroke((0,0,-5), (1,1,5)) )
+  # 
+  # def test_normalized_doesnt_change_original(self):
+  #   tag = Tag( Stroke((-5,-5,-5), (5,5,5)) )
+  #   normalized = tag.normalized()
+  #   self.assertEqual( tag.strokes[0], Stroke((-5,-5,-5), (5,5,5)) )
   
   def test_empty_flattened_stroke(self):
     self.assertEqual( self.empty_tag.flattened_stroke(), Stroke() )

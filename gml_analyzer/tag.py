@@ -63,7 +63,10 @@ class Tag:
     normalizing_range = max(width, height)
 
     for stroke in normalized.strokes:
-      stroke.points = [ (point - min_point) / normalizing_range for point in stroke.points ]
+      for point in stroke.points:
+        position = (point.xy - min_point) / normalizing_range # OPTIMIZE: we should cast instead
+        # normalized_point = PointXYT( (position.x, position.y, point.t) )
+        stroke.points.append(position)
 
     return normalized
 

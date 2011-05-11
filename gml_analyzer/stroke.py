@@ -15,7 +15,7 @@ class Stroke:
   
   def __init__(self, *points):
     """Initialize a new stroke. All arguments are converted into PointXYT objects on init"""
-    self.points = map( PointXYT._make, points )
+    self.points = map( PointXYT, points )
   
   def __eq__(self, other):
     """To reduce duplication, equality is based on hash"""
@@ -23,7 +23,7 @@ class Stroke:
   
   def __hash__(self):
     """If two stroke's points are equal, the strokes are equal"""
-    return hash( tuple(self.points) )
+    return hash( tuple( map(tuple, self.points) ) ) # OPTIMIZE: !!!
   
   def __add__(a, b):
     """Adding two strokes concatenates their paths"""
@@ -52,12 +52,12 @@ class Stroke:
     """Returns a tuple containing the stroke's minimum and maximum point, or (Zero, Zero) if the stroke is empty"""
     if not self.points: return ( Point.Zero, Point.Zero )
     
-    minimum = Point(float("inf"), float("inf"))
-    maximum = Point(float("-inf"), float("-inf"))
+    minimum = Point((float("inf"), float("inf")))
+    maximum = Point((float("-inf"), float("-inf")))
     
     for point in self.points:
-      minimum = Point( min(minimum.x, point.x), min(minimum.y, point.y) )
-      maximum = Point( max(maximum.x, point.x), max(maximum.y, point.y) )
+      minimum = Point(( min(minimum.x, point.x), min(minimum.y, point.y) ))
+      maximum = Point(( max(maximum.x, point.x), max(maximum.y, point.y) ))
     
     return ( minimum, maximum )
   
@@ -75,7 +75,7 @@ class Stroke:
   @property
   def arc_length(self):
     """Returns the arc length of the stroke"""
-    return sum( p1.xy.distance( p2 ) for p1, p2 in each_pair(self.points) )
+    return sum( p1.xy.distance( p2.xy ) for p1, p2 in each_pair(self.points) )
   
   def __intersection_count__(self, other):
     """Returns the number of intersections of this stroke with another stroke"""
@@ -187,7 +187,7 @@ class Stroke:
     """Returns a tuple containing the distance of each point in the stroke from its centroid"""
     centroid = self.centroid
 
-    return tuple( centroid.distance( point ) for point in self.points )
+    return tuple( centroid.distance( point.xy ) for point in self.points ) 
   
   @property
   def std_distance_from_centroid(self):
@@ -207,7 +207,7 @@ class Stroke:
     http://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
     """
     
-    points = sorted( set( self.points ) )
+    points = sorted( set( map(tuple, self.points) ) ) # OPTIMIZE: !!!
     
     if len(points) <= 1: return Stroke(*points)
     
@@ -263,7 +263,7 @@ class Stroke:
       smoothed_points = []
       for p1, p2, p3 in each_cons(smoothed_stroke.points, 3):
         smoothed = (p1.xy + p2.xy + p3.xy) / 3.0
-        smoothed_points.append( PointXYT(smoothed.x, smoothed.y, p2.t) )
+        smoothed_points.append( PointXYT((smoothed.x, smoothed.y, p2.t)) )
       
       # Pin endpoints to their original values so a stroke can't blur into itself
       smoothed_with_pinned_endpoints = [smoothed_stroke.points[0]] + smoothed_points + [smoothed_stroke.points[-1]]
