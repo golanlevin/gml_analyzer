@@ -4,10 +4,21 @@ import math
 
 from point import Point, PointXYT
 
-def each_cons(x, size):
-    return [ x[i:i+size] for i in range( len(x)-size+1 ) ]
-def each_pair(x):
-    return each_cons(x, 2)
+from itertools import tee, izip
+def each_cons(iterable, length=2, overlap=0):
+    it = iter(iterable)
+    results = list(itertools.islice(it, length))
+    while len(results) == length:
+        yield results
+        results = results[length - overlap:]
+        results.extend(itertools.islice(it, length - overlap))
+    if results:
+        yield results
+def each_pair(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
 
 class Stroke:
   
