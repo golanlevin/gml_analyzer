@@ -13,5 +13,10 @@ for filename in glob.glob("*.gml"):
   tag.filename = filename
   
   tags.add(tag)
+  
+print "-- finished loading tags --"
+
+for tag in tags:
+  tag.flattened_stroke().self_intersection_count
 
 print len(tags)
