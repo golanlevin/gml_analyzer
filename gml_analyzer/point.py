@@ -1,6 +1,6 @@
 from math import sqrt, acos, degrees, copysign, pi
 from collections import namedtuple
-from numpy import ndarray, arccos, asarray, vdot, abs
+from numpy import ndarray, arccos, asarray, vdot, abs, linalg
 import numpy
 
 class Point(ndarray):
@@ -37,8 +37,7 @@ class Point(ndarray):
     return copysign(theta, signed_area(A,B,C))
   
   def distance(a, b):
-    delta = a - b
-    return sqrt(delta.x ** 2 + delta.y ** 2)
+    return linalg.norm(a - b)
 
 Point.Zero = Point((0, 0))
 
