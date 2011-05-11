@@ -6,6 +6,8 @@ import numpy
 class Point(ndarray):
   
   def __new__(klass, input_array, dtype=float):
+    if len(input_array) != 2: raise ValueError("Point must have two elements")
+    
     return asarray(input_array, dtype=float).view(klass)
   
   def __eq__(self, other):
@@ -41,10 +43,12 @@ class Point(ndarray):
 
 Point.Zero = Point((0, 0))
 
-class PointXYT(ndarray):
+class PointXYT(Point):
   
-  def __new__(klass, input_array, dtype=float):
-    return asarray(input_array, dtype=float).view(klass)
+  def __new__(klass, input_array):
+    if len(input_array) != 3: raise ValueError("PointXYT must have 3 elements")
+    
+    return asarray(input_array).view(klass)
 
   def __eq__(self, other):
     return numpy.equal(self, other).all()
@@ -60,11 +64,6 @@ class PointXYT(ndarray):
   @property
   def t(self):
     return self[2]
-
-  # def __coerce__(self, other):
-  #   if( hasattr(other, 'x') or hasattr(other, 'y') ):
-  #     coerced = PointXYT( getattr(other, 'x', 0), getattr(other, 'y', 0), getattr(other, 't', 0) )
-  #     return (self, coerced)
   
   @property
   def xy(self):
